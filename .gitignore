@@ -15,6 +15,7 @@ server.pid
 *.eml
 /dist/
 .cache
+.cache-main
 logs
 target
 /.idea
