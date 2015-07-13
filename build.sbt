@@ -12,6 +12,7 @@ libraryDependencies ++= Seq(
 	"com.typesafe.play" %% "anorm" 				% "2.4.0",
 	"org.webjars" 		%% "webjars-play" 		% "2.4.0-1",
   	"org.webjars" 		%  "bootstrap" 			% "3.1.1-2",
+  	"org.webjars"       %  "flat-ui"            % "bcaf2de95e",
   	"org.webjars" 		%  "react" 				% "0.13.3",
   	"org.webjars" 		%  "marked" 			% "0.3.2"
 )

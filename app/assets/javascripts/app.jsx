@@ -102,6 +102,4 @@ var Comment = React.createClass({
   }
 });
 
-React.render(
-  <CommentBox url="http://localhost:9000/comments" pollInterval={2000} />,
-  document.getElementById('content'));
+React.render(<CommentBox url="http://localhost:9000/comments" pollInterval={2000} />, document.getElementById('content'));
