@@ -35,7 +35,7 @@ object Employee {
   }
 
   // -- Queries
-
+  Employee
   /**
    * Retrieve a employee from the id.
    */
@@ -44,7 +44,7 @@ object Employee {
       SQL("select * from employee where id = {id}").on('id -> id).as(employee.singleOpt)
     }
   }
-  
+
   /**
    * Return a page of (Employee).
    *
@@ -54,38 +54,34 @@ object Employee {
    * @param filter Filter applied on the name column
    */
   def list(page: Int = 0, pageSize: Int = 10, orderBy: Int = 1, filter: String = "%"): Page[Employee] = {
-    
+
     val offest = pageSize * page
-    
+
     DB.withConnection { implicit connection =>
-      
+
       val employees = SQL(
         """
           select * from employee 
           where employee.name like {filter}
           order by {orderBy} nulls last
           limit {pageSize} offset {offset}
-        """
-      ).on(
-        'pageSize -> pageSize, 
-        'offset -> offest,
-        'filter -> filter,
-        'orderBy -> orderBy
-      ).as(employee *)
+        """).on(
+          'pageSize -> pageSize,
+          'offset -> offest,
+          'filter -> filter,
+          'orderBy -> orderBy).as(employee *)
 
       val totalRows = SQL(
         """
           select count(*) from employee 
           where employee.name like {filter}
-        """
-      ).on(
-        'filter -> filter
-      ).as(scalar[Long].single)
+        """).on(
+          'filter -> filter).as(scalar[Long].single)
 
       Page(employees, page, offest, totalRows)
-      
+
     }
-    
+
   }
 
   /**

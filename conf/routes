@@ -12,10 +12,9 @@ GET    /comments               controllers.Application.comments
 POST   /comment                controllers.Application.comment(author, text)
 
 # Employees list (look at the default values for pagination parameters)
-GET    /employees              controllers.Application.list(p:Int ?= 0, s:Int ?= 2, f ?= "")
+GET    /employees              controllers.Application.list
 
 # Add employee
-GET    /employees/new          controllers.Application.create
 POST   /employees/save         controllers.Application.save
 
 # Edit existing employee

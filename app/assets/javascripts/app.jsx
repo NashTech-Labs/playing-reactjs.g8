@@ -1,5 +1,5 @@
-var CommentBox = React.createClass({
-  loadCommentsFromServer: function() {
+var EmployeeDetail = React.createClass({
+  loadEmployees: function() {
     $.ajax({
       url: this.props.url,
       dataType: 'json',
@@ -16,90 +16,102 @@ var CommentBox = React.createClass({
     return {data: []};
   },
   componentDidMount: function() {
-    this.loadCommentsFromServer();
-    setInterval(this.loadCommentsFromServer, this.props.pollInterval);
+    this.loadEmployees();
+    setInterval(this.loadEmployees, this.props.pollInterval);
   },
   render: function() {
     return (
-      <div className="commentBox">
-        <h1>Comments</h1>
-        <CommentList data={this.state.data} />
-        <CommentForm />
+      <div className="">
+        <h1>Employees</h1>
+        <EmployeeForm />
+        <Employees data={this.state.data} />
       </div>
     );
   }
 });
 
-var CommentList = React.createClass({
+var Employees = React.createClass({
   render: function() {
-    var commentNodes = this.props.data.map(function (comment) {
+    var employeeNodes = this.props.data.map(function (employee) {
       return (
-        <Comment key={comment.id} author={comment.author}>
-          {comment.text}
-        </Comment>
+        <Employee key={employee.id} name={employee.name} address={employee.address} designation={employee.designation} />
       );
     });
 
     return (
-      <div className="commentList">
-        {commentNodes}
+      <div className="well">
+        {employeeNodes}
       </div>
     );
   }
 });
 
-var CommentForm = React.createClass({
+var Employee = React.createClass({
+  render: function() {
+    return (
+      <blockquote>
+        <p>{this.props.name}</p>
+        <strong>{this.props.address}</strong>
+        <small>{this.props.designation}</small>
+      </blockquote>
+    );
+  }
+});
+
+var EmployeeForm = React.createClass({
   handleSubmit: function(e) {
     e.preventDefault();
-    var author = React.findDOMNode(this.refs.author).value.trim();
-    var text = React.findDOMNode(this.refs.text).value.trim();
-    if (!text || !author) {
-      return;
-    }
+        
+    var formData = $("#employeeForm").serialize();
 
-    var commentUrl = "http://localhost:9000/comment?author=" + author + "&text=" + text;
+    var saveUrl = "http://localhost:9000/employees/save";
     $.ajax({
-          url: commentUrl,
-          method: 'POST',
-          dataType: 'json',
-          cache: false,
-          success: function(data) {
-            console.log(data)
-          }.bind(this),
-          error: function(xhr, status, err) {
-            console.error(commentUrl, status, err.toString());
-          }.bind(this)
-        });
+      url: saveUrl,
+      method: 'POST',
+      dataType: 'json',
+      data: formData,
+      cache: false,
+      success: function(data) {
+        console.log(data)
+      }.bind(this),
+      error: function(xhr, status, err) {
+        console.error(saveUrl, status, err.toString());
+      }.bind(this)
+    });
 
     // clears the form fields
-    React.findDOMNode(this.refs.author).value = '';
-    React.findDOMNode(this.refs.text).value = '';
+    React.findDOMNode(this.refs.name).value = '';
+    React.findDOMNode(this.refs.address).value = '';
+    React.findDOMNode(this.refs.designation).value = '';
     return;
   },
   render: function() {
     return (
-      <form className="commentForm" onSubmit={this.handleSubmit}>
-        <input type="text" placeholder="Your name" ref="author" />
-        <input type="text" placeholder="Say something..." ref="text" />
-        <input type="submit" value="Post" />
-      </form>
+    	<div className="row">
+      		<form id="employeeForm" onSubmit={this.handleSubmit}>
+		        <div className="col-xs-3">
+		          <div className="form-group">
+		            <input type="text" name="name" required="required" ref="name" placeholder="Name" className="form-control" />
+		          </div>
+		        </div>
+		        <div className="col-xs-3">
+		          <div className="form-group">
+		            <input type="text" name="address"required="required"  ref="address" placeholder="Address" className="form-control" />
+		          </div>
+		        </div>
+		        <div className="col-xs-3">
+		          <div className="form-group">
+		            <input type="text" name="designation" required="required" ref="designation" placeholder="Designation" className="form-control" />
+		            <span className="input-icon fui-check-inverted"></span>
+		          </div>
+		        </div>
+		        <div className="col-xs-3">
+		          <input type="submit" className="btn btn-block btn-info" value="Add" />
+		        </div>
+			</form>
+	   </div>
     );
   }
 });
 
-var Comment = React.createClass({
-  render: function() {
-    var rawMarkup = marked(this.props.children.toString(), {sanitize: true});
-
-    return (
-      <div className="comment">
-        <h2 className="commentAuthor">
-          {this.props.author}
-        </h2>
-        <span dangerouslySetInnerHTML={{__html: rawMarkup}} />
-      </div>
-    );
-  }
-});
-
-React.render(<CommentBox url="http://localhost:9000/comments" pollInterval={2000} />, document.getElementById('content'));
+React.render(<EmployeeDetail url="http://localhost:9000/employees" pollInterval={2000} />, document.getElementById('content'));

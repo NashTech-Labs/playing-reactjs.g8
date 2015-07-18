@@ -20,6 +20,8 @@ import play.api.libs.concurrent.Promise
 
 
 class Application extends Controller {
+  
+  implicit val empJsonFormat = Json.format[Employee]
 
   def index = Action {
     Ok(views.html.index("Your new application is ready."))
@@ -70,25 +72,17 @@ class Application extends Controller {
       "designation" -> nonEmptyText)(Employee.apply)(Employee.unapply))
 
   /**
-   * Handle default path requests, redirect to employee list
-   */
-  //def index = Action { Home }
-
-  /**
    * This result directly redirect to the application home.
    */
   val Home = Redirect(routes.Application.list())
 
   /**
-   * Display the paginated list of employees.
+   * Display the list of employees.
    *
-   * @param page Current page number (starts from 0)
-   * @param orderBy Column to be sorted
-   * @param filter Filter applied on employee names
    */
-  def list(page: Int, orderBy: Int, filter: String) = Action.async { implicit request =>
-    val futurePage: Future[Page[Employee]] = TimeoutFuture(Employee.list(page = page, orderBy = orderBy, filter = ("%" + filter + "%")))
-    futurePage.map(page => Ok("")).recover {
+  def list = Action.async { implicit request =>
+    val futurePage: Future[List[Employee]] = TimeoutFuture(Employee.findAll)
+    futurePage.map(employees => Ok(Json.toJson(employees))).recover {
       case t: TimeoutException =>
         Logger.error("Problem found in employee list process")
         InternalServerError(t.getMessage)
@@ -130,13 +124,6 @@ class Application extends Controller {
             InternalServerError(t.getMessage)
         }
       })
-  }
-
-  /**
-   * Display the 'new employee form'.
-   */
-  def create = Action {
-    Ok("")
   }
 
   /**
