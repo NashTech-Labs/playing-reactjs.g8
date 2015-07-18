@@ -25,6 +25,10 @@ class Application extends Controller {
     Ok(views.html.index("Your new application is ready."))
   }
   
+  def dashboard = Action {
+    Ok(views.html.dashboard("Your new application is ready."))
+  }
+  
   // The json keys. The 'id' field was added as without it we would get a warning like this:
   // Warning: Each child in an array or iterator should have a unique "key" prop. Check the render method of CommentList. See https://fb.me/react-warning-keys for more information.
   val JSON_KEY_COMMENTS = "comments"
@@ -63,8 +67,6 @@ class Application extends Controller {
       "id" -> ignored(0: Long),
       "name" -> nonEmptyText,
       "address" -> nonEmptyText,
-      "dob" -> date("yyyy-MM-dd"),
-      "joiningDate" -> date("yyyy-MM-dd"),
       "designation" -> nonEmptyText)(Employee.apply)(Employee.unapply))
 
   /**

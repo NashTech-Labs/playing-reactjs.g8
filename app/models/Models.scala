@@ -8,7 +8,7 @@ import anorm.SqlParser._
 import scala.language.postfixOps
 import play.api.Logger
 
-case class Employee(id: Long, name: String, address: String, dob: Date, joiningDate: Date, designation: String)
+case class Employee(id: Long, name: String, address: String, designation: String)
 
 /**
  * Helper for pagination.
@@ -29,10 +29,8 @@ object Employee {
     get[Long]("employee.id") ~
       get[String]("employee.name") ~
       get[String]("employee.address") ~
-      get[Date]("employee.dob") ~
-      get[Date]("employee.joining_date") ~
       get[String]("employee.designation") map {
-        case id ~ name ~ address ~ dob ~ joiningDate ~ designation => Employee(id, name, address, dob, joiningDate, designation)
+        case id ~ name ~ address ~ designation => Employee(id, name, address, designation)
       }
   }
 
@@ -116,14 +114,12 @@ object Employee {
       SQL(
         """
           update employee
-          set name = {name}, address = {address}, dob = {dob}, joining_date = {joiningDate}, designation = {designation}
+          set name = {name}, address = {address}, designation = {designation}
           where id = {id}
         """).on(
           'id -> id,
           'name -> employee.name,
           'address -> employee.address,
-          'dob -> employee.dob,
-          'joiningDate -> employee.joiningDate,
           'designation -> employee.designation).executeUpdate()
     }
   }
@@ -138,14 +134,12 @@ object Employee {
       SQL(
         """
           insert into employee values (
-    		{id}, {name}, {address}, {dob}, {joiningDate}, {designation}
+    		{id}, {name}, {address}, {designation}
           )
         """).on(
           'id -> Option.empty[Long],
           'name -> employee.name,
           'address -> employee.address,
-          'dob -> employee.dob,
-          'joiningDate -> employee.joiningDate,
           'designation -> employee.designation).executeInsert()
     }
   }
