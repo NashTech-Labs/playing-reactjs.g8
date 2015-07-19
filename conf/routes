@@ -7,10 +7,6 @@ GET    /                       controllers.Application.index
 
 GET    /dashboard              controllers.Application.dashboard
 
-# APIs
-GET    /comments               controllers.Application.comments
-POST   /comment                controllers.Application.comment(author, text)
-
 # Employees list (look at the default values for pagination parameters)
 GET    /employees              controllers.Application.list
 
