@@ -45,4 +45,5 @@ All the screens:
 * [WebJars](http://www.webjars.org/)
 * [Bootstrap](http://getbootstrap.com/css/)
 * [Flat-UI](http://designmodo.github.io/Flat-UI/)
+* [ReactJS Tutorial](http://ticofab.io/react-js-tutorial-with-play_scala_webjars/)
 
