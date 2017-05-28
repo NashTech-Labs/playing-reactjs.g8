@@ -1,24 +1,12 @@
-name := """playing-reactjs"""
-
-version := "1.0-SNAPSHOT"
-
-lazy val root = (project in file(".")).enablePlugins(PlayScala, SbtWeb)
-
-scalaVersion := "2.11.6"
-
-libraryDependencies ++= Seq(jdbc, cache, ws, evolutions, specs2 % Test)
-
-libraryDependencies ++= Seq(
-	"com.typesafe.play" %% "anorm" 				% "2.4.0",
-	"org.webjars" 		%% "webjars-play" 		% "2.4.0-1",
-  	"org.webjars" 		%  "bootstrap" 			% "3.1.1-2",
-  	"org.webjars"       %  "flat-ui"            % "bcaf2de95e",
-  	"org.webjars" 		%  "react" 				% "0.13.3",
-  	"org.webjars" 		%  "marked" 			% "0.3.2"
-)
-
-resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
-
-// Play provides two styles of routers, one expects its actions to be injected, the
-// other, legacy style, accesses its actions statically.
-routesGenerator := InjectedRoutesGenerator
+// This build is for this Giter8 template.
+// To test the template run `g8` or `g8Test` from the sbt session.
+// See http://www.foundweekends.org/giter8/testing.html#Using+the+Giter8Plugin for more details.
+lazy val root = (project in file(".")).
+  settings(
+    name := "playing-reactjs",
+    test in Test := {
+      val _ = (g8Test in Test).toTask("").value
+    },
+    scriptedLaunchOpts ++= List("-Xms1024m", "-Xmx1024m", "-XX:ReservedCodeCacheSize=128m", "-XX:MaxPermSize=256m", "-Xss2m", "-Dfile.encoding=UTF-8"),
+    resolvers += Resolver.url("typesafe", url("http://repo.typesafe.com/typesafe/ivy-releases/"))(Resolver.ivyStylePatterns)
+  )
